@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}New Batch - Burban Baggers Lot Tracking{% endblock %}
+
+{% block content %}
+  <section class="page-heading">
+    <h1>New Batch</h1>
+    <p>Create a lot from an active product recipe.</p>
+  </section>
+
+  <form class="entry-form" data-json-form data-method="POST" data-action="{{ url_for('main.api_create_batch') }}">
+    <div class="form-grid">
+      <label>
+        Product
+        <select name="product_id" required>
+          {% for product in products %}
+            <option value="{{ product.id }}">{{ product.name }} ({{ product.code }})</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label>
+        Recipe
+        <select name="recipe_id" required>
+          {% for recipe in recipes %}
+            <option value="{{ recipe.id }}">{{ recipe.name }} v{{ recipe.version }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label>
+        Production Date
+        <input type="date" name="production_date" value="{{ today }}" required>
+      </label>
+
+      <label>
+        Lot Override
+        <input name="lot_number" autocomplete="off" placeholder="Leave blank for automatic lot">
+      </label>
+    </div>
+
+    <label>
+      Notes
+      <textarea name="notes" rows="4"></textarea>
+    </label>
+
+    <div class="form-actions">
+      <button type="submit">Create Batch</button>
+      <p class="form-message" data-form-message></p>
+    </div>
+  </form>
+{% endblock %}

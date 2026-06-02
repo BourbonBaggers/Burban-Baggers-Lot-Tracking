@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}{{ batch.lot_number }} - Burban Baggers Lot Tracking{% endblock %}
+
+{% block content %}
+  <section class="page-heading page-heading-row">
+    <div>
+      <h1>{{ batch.lot_number }}</h1>
+      <p>{{ batch.product.name }} · {{ batch.production_date }} · {{ batch.status }}</p>
+    </div>
+    <button type="button" onclick="window.print()">Print</button>
+  </section>
+
+  <section class="record-summary">
+    <dl>
+      <div>
+        <dt>Recipe</dt>
+        <dd>{{ batch.recipe.name }} v{{ batch.recipe.version }}</dd>
+      </div>
+      <div>
+        <dt>Product Code</dt>
+        <dd>{{ batch.product.code }}</dd>
+      </div>
+      <div>
+        <dt>Notes</dt>
+        <dd>{{ batch.notes or "None" }}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section>
+    <div class="section-heading">
+      <h2>Ingredients</h2>
+      <p>Supplier lots and actual quantities used.</p>
+    </div>
+
+    <form data-ingredient-form data-action="{{ url_for('main.api_update_batch_ingredients', batch_id=batch.id) }}">
+      <table class="data-table editable-table">
+        <thead>
+          <tr>
+            <th>Ingredient</th>
+            <th>Supplier</th>
+            <th>Supplier Lot</th>
+            <th>Internal Lot</th>
+            <th>Actual Qty</th>
+            <th>Unit</th>
+            <th>Expiration</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ingredient in batch.ingredients %}
+            <tr data-ingredient-id="{{ ingredient.id }}">
+              <td>
+                <strong>{{ ingredient.ingredient_name }}</strong>
+                <span class="muted">Default {{ ingredient.default_quantity }} {{ ingredient.unit }}</span>
+              </td>
+              <td><input name="supplier" value="{{ ingredient.supplier }}"></td>
+              <td><input name="supplier_lot" value="{{ ingredient.supplier_lot }}"></td>
+              <td><input name="internal_lot" value="{{ ingredient.internal_lot }}"></td>
+              <td><input name="actual_quantity" type="number" step="0.001" value="{{ ingredient.actual_quantity }}"></td>
+              <td><input name="unit" value="{{ ingredient.unit }}"></td>
+              <td><input name="expiration_date" type="date" value="{{ ingredient.expiration_date or '' }}"></td>
+              <td><input name="notes" value="{{ ingredient.notes }}"></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="form-actions">
+        <button type="submit">Save Ingredients</button>
+        <p class="form-message" data-form-message></p>
+      </div>
+    </form>
+  </section>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Batches - Burban Baggers Lot Tracking{% endblock %}
+
+{% block content %}
+  <section class="page-heading page-heading-row">
+    <div>
+      <h1>Batches</h1>
+      <p>Search and open lot records.</p>
+    </div>
+    <a class="button" href="{{ url_for('main.new_batch') }}">New Batch</a>
+  </section>
+
+  <form class="search-form" method="get">
+    <label for="q">Lot search</label>
+    <input id="q" name="q" value="{{ query }}" autocomplete="off">
+    <button type="submit">Search</button>
+  </form>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Lot Number</th>
+        <th>Product</th>
+        <th>Production Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for batch in batches %}
+        <tr>
+          <td><a href="{{ url_for('main.batch_detail', lot_number=batch.lot_number) }}">{{ batch.lot_number }}</a></td>
+          <td>{{ batch.product.name }}</td>
+          <td>{{ batch.production_date }}</td>
+          <td>{{ batch.status }}</td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="4">No batches found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

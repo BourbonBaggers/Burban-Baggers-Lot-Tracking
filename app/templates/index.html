@@ -11,7 +11,28 @@
   <section class="panel-grid" aria-label="Current modules">
     <article class="panel">
       <h2>Batches</h2>
-      <p>No batch workflow has been implemented yet.</p>
+      {% if recent_batches %}
+        <table class="compact-table">
+          <thead>
+            <tr>
+              <th>Lot</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for batch in recent_batches %}
+              <tr>
+                <td><a href="{{ url_for('main.batch_detail', lot_number=batch.lot_number) }}">{{ batch.lot_number }}</a></td>
+                <td>{{ batch.production_date }}</td>
+                <td>{{ batch.status }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>No batches yet.</p>
+      {% endif %}
     </article>
     <article class="panel">
       <h2>QC Pending</h2>

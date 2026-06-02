@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-M2 - Core Data Model and Seed Data complete.
+M3 - Batch Creation and Fast Data Entry complete.
 
 ## Product
 
@@ -54,9 +54,25 @@ M2 core data layer has been added and verified:
 - `docker compose run --rm --build app pytest` passes with 3 tests.
 - Detached app responds at `http://localhost:8020/health`.
 
+M3 batch workflow has been added and verified:
+
+- Batch list at `/batches`.
+- New batch form at `/batches/new`.
+- Batch detail page at `/batches/<lot_number>`.
+- Navigation links for batch list and new batch.
+- `POST /api/batches` creates a draft batch, auto-generates the next lot number, and
+  copies recipe ingredients to the batch.
+- `PATCH /api/batches/<id>/ingredients` saves supplier lots, internal lots, actual
+  quantities, units, expiration dates, and notes.
+- Minimal vanilla JavaScript submits JSON mutations and redirects after batch creation.
+- Batch detail screen has a print button and print-friendly styling.
+- `docker compose run --rm --build app pytest` passes with 4 tests.
+- Verification batch `TC-SYR-20260602-A` was created in the local Docker SQLite volume.
+- Ingredient save was verified through the running app.
+
 ## Open Questions
 
-- Batch creation UI and JSON mutation endpoints are not implemented yet.
+- Production records, bottle counts, release QC, and status transitions are not implemented yet.
 
 ## Deployment
 
