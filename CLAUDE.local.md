@@ -10,7 +10,8 @@
 - Deploy sequence: not defined yet.
 
 ## Local Dev Port
-<!-- Port used for local testing and how to access it. -->
+- Port: `8020`
+- URL: `http://localhost:8020`
 
 ## Environment Variables
 <!-- List of required env vars. Never commit .env — use .env.example. -->

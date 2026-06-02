@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-M0 - Planning Baseline.
+M1 - Flask Skeleton and Docker complete.
 
 ## Product
 
@@ -25,11 +25,26 @@ Initial product: Toasted Cherry Simple Syrup.
 
 ## Repository Status
 
-No application code exists yet. The first checkpoint is documentation and project history.
+M0 is committed and pushed to GitHub.
+
+M1 app skeleton has been added and verified:
+
+- Flask application factory.
+- Jinja base layout and placeholder production dashboard.
+- Print-friendly base stylesheet.
+- Environment-variable configuration.
+- SQLAlchemy extension.
+- Alembic environment.
+- Dockerfile and Docker Compose using port `8020`.
+- `python3 -m compileall app migrations wsgi.py` passes.
+- `docker compose up --build` runs successfully.
+- `GET /health` returns `{"status":"ok"}`.
+- `docker compose exec app alembic current` loads the migration environment.
 
 ## Open Questions
 
-- Local development port is not selected yet.
+- Core data models are not implemented yet.
+- First migration is not implemented yet.
 
 ## Deployment
 
@@ -37,3 +52,8 @@ No application code exists yet. The first checkpoint is documentation and projec
 - Deploy user: `jayk1`
 - SSH target: `jayk1@192.168.0.124`
 - Deploy sequence is not defined yet.
+
+## Local Dev
+
+- URL: `http://localhost:8020`
+- Health check: `http://localhost:8020/health`

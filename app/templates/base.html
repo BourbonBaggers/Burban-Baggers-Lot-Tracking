@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Burban Baggers Lot Tracking{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  </head>
+  <body>
+    <header class="site-header">
+      <div>
+        <a class="site-title" href="{{ url_for('main.index') }}">Burban Baggers Lot Tracking</a>
+        <p class="site-subtitle">Internal batch, lot, and QC records</p>
+      </div>
+    </header>
+    <main class="page">
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

@@ -9,11 +9,29 @@ CSV exports, and n8n API access.
 
 ## Current Status
 
-Planning checkpoint only. No application code has been implemented yet.
+M1 skeleton in progress. The app has a Flask/Jinja shell, environment configuration,
+SQLAlchemy/Alembic wiring, and Docker Compose.
+
+## Run Locally
+
+```bash
+docker compose up --build
+```
+
+Open:
+
+```text
+http://localhost:8020
+```
+
+Health check:
+
+```text
+http://localhost:8020/health
+```
 
 See:
 
 - `docs/Bourbon_Baggers_Simple_Syrup_PRD_For_Codex.md`
 - `docs/history-plan.md`
 - `memory/project-state.md`
-

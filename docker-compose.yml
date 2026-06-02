@@ -1,0 +1,18 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8020:8020"
+    environment:
+      FLASK_ENV: development
+      SECRET_KEY: dev-secret
+      DATABASE_URL: sqlite:////data/lot_tracking.sqlite3
+      UPLOAD_FOLDER: /uploads
+      API_KEY: ""
+    volumes:
+      - lot_tracking_data:/data
+      - lot_tracking_uploads:/uploads
+
+volumes:
+  lot_tracking_data:
+  lot_tracking_uploads:

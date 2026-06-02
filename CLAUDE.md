@@ -22,19 +22,19 @@ Primary product for initial launch: Toasted Cherry Simple Syrup.
 ## Key Directories
 
 ```
+app/        Flask application, templates, static assets, and route modules
 docs/       Product requirements, history plan, and implementation notes
 memory/     Durable project/session context to update before every push
+migrations/ Alembic migration environment and versions
 .claude/    Claude workflow settings, commands, agents, and hooks
 ```
 
 ## Dev Workflow
 
 ```bash
-# Not implemented yet.
-# Planned:
-# docker compose up --build
-# docker compose down
-# docker compose logs -f
+docker compose up --build
+docker compose down
+docker compose logs -f
 ```
 
 ## Deploy
@@ -49,6 +49,11 @@ memory/     Durable project/session context to update before every push
 - API key for n8n endpoints is optional and environment-variable based.
 - `.env` is gitignored and must never be committed.
 - Uploaded files, including barcode PNGs, are stored in a mounted Docker volume.
+
+## Local Dev
+
+- Default local URL: `http://localhost:8020`
+- Health check: `http://localhost:8020/health`
 
 ## UX Constraints
 - Internal production/QC tool, not customer-facing.
