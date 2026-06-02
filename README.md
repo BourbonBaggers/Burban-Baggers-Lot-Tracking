@@ -43,6 +43,16 @@ docker compose run --rm app flask seed-data
 docker compose run --rm app pytest
 ```
 
+## n8n API
+
+If `API_KEY` is set, pass it as `X-API-Key` or as a bearer token.
+
+```text
+GET /api/checkpoints/due
+GET /api/checkpoints/upcoming?days=30
+GET /api/batches/{lot_number}
+```
+
 See:
 
 - `docs/Bourbon_Baggers_Simple_Syrup_PRD_For_Codex.md`

@@ -4,6 +4,7 @@ from decimal import Decimal
 from app.extensions import db
 from app.models import Batch, BottleCount, ProductionRecord, QCRecord
 from app.services.batches import calculate_released_count
+from app.services.checkpoints import create_release_checkpoints
 
 
 BATCH_STATUSES = {
@@ -26,6 +27,9 @@ def update_batch_status(batch_id, status):
         raise ValueError("Batch not found")
 
     batch.status = status
+    if status == "Released":
+        create_release_checkpoints(batch)
+
     db.session.commit()
     return batch
 

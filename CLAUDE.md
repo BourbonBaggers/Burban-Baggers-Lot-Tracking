@@ -57,6 +57,8 @@ docker compose run --rm app pytest
 
 - Default local URL: `http://localhost:8020`
 - Health check: `http://localhost:8020/health`
+- Gunicorn runs with 2 workers and 4 threads to avoid one slow local connection blocking
+  internal data-entry actions.
 
 ## UX Constraints
 - Internal production/QC tool, not customer-facing.

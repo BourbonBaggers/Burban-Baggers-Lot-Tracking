@@ -1,9 +1,17 @@
 from datetime import date
 
-from flask import Blueprint, jsonify, redirect, render_template, request, url_for
+from flask import Blueprint, current_app, jsonify, render_template, request, url_for
 
-from app.models import Batch, Product, Recipe
+from app.models import Batch, Product, Recipe, ShelfLifeCheckpoint
 from app.services.batches import create_batch, update_batch_ingredients
+from app.services.checkpoints import (
+    batch_to_dict,
+    checkpoint_to_dict,
+    due_checkpoints,
+    refresh_checkpoint_statuses,
+    upcoming_checkpoints,
+    update_checkpoint,
+)
 from app.services.production import (
     update_batch_status,
     update_bottle_count,
@@ -52,8 +60,20 @@ def new_batch():
 @main.get("/batches/<lot_number>")
 def batch_detail(lot_number):
     batch = Batch.query.filter_by(lot_number=lot_number).first_or_404()
+    refresh_checkpoint_statuses(batch.shelf_life_checkpoints)
     release_qc = next((qc for qc in batch.qc_records if qc.qc_type == "Release"), None)
     return render_template("batches/detail.html", batch=batch, release_qc=release_qc)
+
+
+@main.get("/checkpoints")
+def checkpoint_list():
+    checkpoints = (
+        ShelfLifeCheckpoint.query.join(Batch)
+        .order_by(ShelfLifeCheckpoint.due_date, ShelfLifeCheckpoint.id)
+        .all()
+    )
+    refresh_checkpoint_statuses(checkpoints)
+    return render_template("checkpoints/list.html", checkpoints=checkpoints)
 
 
 @main.post("/api/batches")
@@ -124,3 +144,58 @@ def api_update_batch_status(batch_id):
         return jsonify({"error": str(error)}), 400
 
     return jsonify({"id": batch.id, "status": batch.status})
+
+
+@main.patch("/api/checkpoints/<int:checkpoint_id>")
+def api_update_checkpoint(checkpoint_id):
+    try:
+        checkpoint = update_checkpoint(checkpoint_id, request.get_json(force=True))
+    except (KeyError, ValueError) as error:
+        return jsonify({"error": str(error)}), 400
+
+    return jsonify(checkpoint_to_dict(checkpoint))
+
+
+@main.get("/api/checkpoints/due")
+def api_due_checkpoints():
+    auth_error = api_auth_error()
+    if auth_error:
+        return auth_error
+
+    checkpoints = refresh_checkpoint_statuses(due_checkpoints())
+    return jsonify({"checkpoints": [checkpoint_to_dict(item) for item in checkpoints]})
+
+
+@main.get("/api/checkpoints/upcoming")
+def api_upcoming_checkpoints():
+    auth_error = api_auth_error()
+    if auth_error:
+        return auth_error
+
+    days = int(request.args.get("days", 30))
+    checkpoints = refresh_checkpoint_statuses(upcoming_checkpoints(days=days))
+    return jsonify({"checkpoints": [checkpoint_to_dict(item) for item in checkpoints]})
+
+
+@main.get("/api/batches/<lot_number>")
+def api_batch(lot_number):
+    auth_error = api_auth_error()
+    if auth_error:
+        return auth_error
+
+    batch = Batch.query.filter_by(lot_number=lot_number).first_or_404()
+    refresh_checkpoint_statuses(batch.shelf_life_checkpoints)
+    return jsonify(batch_to_dict(batch))
+
+
+def api_auth_error():
+    api_key = current_app.config.get("API_KEY")
+    if not api_key:
+        return None
+
+    header_key = request.headers.get("X-API-Key", "")
+    bearer = request.headers.get("Authorization", "").removeprefix("Bearer ").strip()
+    if api_key in {header_key, bearer}:
+        return None
+
+    return jsonify({"error": "Unauthorized"}), 401

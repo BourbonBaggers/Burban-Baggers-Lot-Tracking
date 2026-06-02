@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-M4 - Production Records, Bottle Counts, and Release QC complete.
+M5 - Shelf-Life Checkpoints and n8n API complete.
 
 ## Product
 
@@ -85,9 +85,28 @@ M4 production and release workflow has been added and verified:
 - Running app verification updated `TC-SYR-20260602-A` to Released with production data,
   release QC, and released count `110`.
 
+M5 shelf-life checkpoints and n8n API have been added and verified:
+
+- Releasing a batch creates missing 3, 6, 9, and 12 month shelf-life checkpoints.
+- Checkpoint list at `/checkpoints` supports row selection and completion entry.
+- `PATCH /api/checkpoints/<id>` saves inspection date, pH, Brix, pass/fail, sensory
+  observations, spoilage observations, and notes.
+- `GET /api/checkpoints/due` returns due and overdue incomplete checkpoints.
+- `GET /api/checkpoints/upcoming?days=30` returns upcoming incomplete checkpoints.
+- `GET /api/batches/<lot_number>` returns batch, ingredient, and checkpoint JSON.
+- n8n API endpoints use optional `API_KEY` from the environment, accepted as `X-API-Key`
+  or bearer token.
+- Gunicorn now runs with 2 workers and 4 threads. Batch creation timing improved from
+  about 17 seconds in the observed local hang case to about 0.04 seconds by preventing one
+  idle sync worker connection from blocking the app.
+- `docker compose run --rm --build app pytest` passes with 11 tests.
+- Running app verification created four checkpoints for `TC-SYR-20260602-A`, returned the
+  3 month checkpoint from the upcoming API, completed checkpoint `1`, and confirmed the
+  due API returned no incomplete due checkpoints.
+
 ## Open Questions
 
-- Shelf-life checkpoint generation and n8n API endpoints are not implemented yet.
+- Printing, label views, and CSV exports are not implemented yet.
 
 ## Deployment
 

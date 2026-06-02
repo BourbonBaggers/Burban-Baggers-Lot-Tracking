@@ -5,31 +5,45 @@ function formToObject(form) {
 async function submitJsonForm(form) {
   const message = form.querySelector("[data-form-message]");
   const releasedCount = form.querySelector("[data-released-count]");
+  const submitButton = form.querySelector('button[type="submit"]');
+
+  if (submitButton) {
+    submitButton.disabled = true;
+  }
+
   message.textContent = "Saving...";
 
-  const response = await fetch(form.dataset.action, {
-    method: form.dataset.method || "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formToObject(form)),
-  });
+  try {
+    const response = await fetch(form.dataset.action, {
+      method: form.dataset.method || "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formToObject(form)),
+    });
 
-  const payload = await response.json();
+    const payload = await response.json();
 
-  if (!response.ok) {
-    message.textContent = payload.error || "Save failed.";
-    return;
+    if (!response.ok) {
+      message.textContent = payload.error || "Save failed.";
+      return;
+    }
+
+    if (payload.location) {
+      window.location.href = payload.location;
+      return;
+    }
+
+    if (releasedCount && payload.released_count !== undefined) {
+      releasedCount.textContent = payload.released_count;
+    }
+
+    message.textContent = "Saved.";
+  } catch {
+    message.textContent = "Save failed.";
+  } finally {
+    if (submitButton) {
+      submitButton.disabled = false;
+    }
   }
-
-  if (payload.location) {
-    window.location.href = payload.location;
-    return;
-  }
-
-  if (releasedCount && payload.released_count !== undefined) {
-    releasedCount.textContent = payload.released_count;
-  }
-
-  message.textContent = "Saved.";
 }
 
 async function submitIngredientForm(form) {
@@ -77,5 +91,70 @@ document.addEventListener("submit", (event) => {
   if (ingredientForm) {
     event.preventDefault();
     submitIngredientForm(ingredientForm);
+    return;
+  }
+
+  const checkpointForm = event.target.closest("[data-checkpoint-form]");
+  if (checkpointForm) {
+    event.preventDefault();
+    submitCheckpointForm(checkpointForm);
   }
 });
+
+document.addEventListener("click", (event) => {
+  const row = event.target.closest("[data-checkpoint-id]");
+  if (!row) {
+    return;
+  }
+
+  document.querySelectorAll("[data-checkpoint-id]").forEach((item) => {
+    item.classList.remove("selected-row");
+  });
+  row.classList.add("selected-row");
+
+  const form = document.querySelector("[data-checkpoint-form]");
+  if (form) {
+    form.querySelector('[name="checkpoint_id"]').value = row.dataset.checkpointId;
+  }
+});
+
+async function submitCheckpointForm(form) {
+  const message = form.querySelector("[data-form-message]");
+  const checkpointId = form.querySelector('[name="checkpoint_id"]').value;
+  const row = document.querySelector(`[data-checkpoint-id="${checkpointId}"]`);
+
+  if (!row) {
+    message.textContent = "Select a checkpoint row first.";
+    return;
+  }
+
+  const payload = {
+    inspection_date: row.querySelector('[name="inspection_date"]').value,
+    ph: row.querySelector('[name="ph"]').value,
+    brix: row.querySelector('[name="brix"]').value,
+    passed: row.querySelector('[name="passed"]').value,
+    notes: row.querySelector('[name="notes"]').value,
+    appearance: form.querySelector('[name="appearance"]').value,
+    aroma: form.querySelector('[name="aroma"]').value,
+    taste_notes: form.querySelector('[name="taste_notes"]').value,
+    seal_condition: form.querySelector('[name="seal_condition"]').value,
+    spoilage_observations: form.querySelector('[name="spoilage_observations"]').value,
+  };
+
+  message.textContent = "Saving...";
+
+  const response = await fetch(`/api/checkpoints/${checkpointId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const result = await response.json();
+
+  if (!response.ok) {
+    message.textContent = result.error || "Save failed.";
+    return;
+  }
+
+  row.querySelector(".status-pill").textContent = result.status;
+  message.textContent = "Saved.";
+}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Shelf-Life Checkpoints - Burban Baggers Lot Tracking{% endblock %}
+
+{% block content %}
+  <section class="page-heading">
+    <h1>Shelf-Life Checkpoints</h1>
+    <p>Upcoming, due, overdue, completed, and failed retained-sample validations.</p>
+  </section>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Lot</th>
+        <th>Product</th>
+        <th>Month</th>
+        <th>Due</th>
+        <th>Status</th>
+        <th>Inspection</th>
+        <th>pH</th>
+        <th>Brix</th>
+        <th>Pass / Fail</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for checkpoint in checkpoints %}
+        <tr data-checkpoint-id="{{ checkpoint.id }}">
+          <td><a href="{{ url_for('main.batch_detail', lot_number=checkpoint.batch.lot_number) }}">{{ checkpoint.batch.lot_number }}</a></td>
+          <td>{{ checkpoint.batch.product.name }}</td>
+          <td>{{ checkpoint.checkpoint_month }}</td>
+          <td>{{ checkpoint.due_date }}</td>
+          <td><span class="status-pill">{{ checkpoint.status }}</span></td>
+          <td><input name="inspection_date" type="date" value="{{ checkpoint.inspection_date or '' }}"></td>
+          <td><input name="ph" type="number" step="0.01" value="{{ checkpoint.ph if checkpoint.ph is not none else '' }}"></td>
+          <td><input name="brix" type="number" step="0.01" value="{{ checkpoint.brix if checkpoint.brix is not none else '' }}"></td>
+          <td>
+            <select name="passed">
+              <option value="" {% if checkpoint.passed is none %}selected{% endif %}>Not Set</option>
+              <option value="true" {% if checkpoint.passed is sameas true %}selected{% endif %}>Pass</option>
+              <option value="false" {% if checkpoint.passed is sameas false %}selected{% endif %}>Fail</option>
+            </select>
+          </td>
+          <td><input name="notes" value="{{ checkpoint.notes }}"></td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="10">No checkpoints found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <form class="entry-form checkpoint-detail-form" data-checkpoint-form>
+    <div class="section-heading">
+      <h2>Checkpoint Details</h2>
+      <p>Select a row above, then save detailed observations here.</p>
+    </div>
+    <input type="hidden" name="checkpoint_id">
+    <div class="form-grid">
+      <label>
+        Appearance
+        <textarea name="appearance" rows="3"></textarea>
+      </label>
+      <label>
+        Aroma
+        <textarea name="aroma" rows="3"></textarea>
+      </label>
+      <label>
+        Taste Notes
+        <textarea name="taste_notes" rows="3"></textarea>
+      </label>
+      <label>
+        Seal Condition
+        <textarea name="seal_condition" rows="3"></textarea>
+      </label>
+    </div>
+    <label>
+      Spoilage Observations
+      <textarea name="spoilage_observations" rows="3"></textarea>
+    </label>
+    <div class="form-actions">
+      <button type="submit">Save Checkpoint</button>
+      <p class="form-message" data-form-message></p>
+    </div>
+  </form>
+{% endblock %}

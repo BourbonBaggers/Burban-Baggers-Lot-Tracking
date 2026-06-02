@@ -12,6 +12,9 @@
 - The user grants intent-level permission to run local bash commands and add or delete files
   within this repository only. The Codex environment may still require approval prompts.
 - Use SSH for deployment when needed: `jayk1@192.168.0.124`.
+- User observed that batch creation appeared to hang for about 10 seconds after lot number
+  generation. Root cause was the single sync Gunicorn worker blocking behind an idle local
+  connection; the app now uses 2 workers and 4 threads.
 
 ## UX Preferences
 

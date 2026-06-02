@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 8020
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8020", "wsgi:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8020", "--workers", "2", "--threads", "4", "--timeout", "60", "wsgi:app"]

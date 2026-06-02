@@ -244,4 +244,46 @@
       </div>
     </form>
   </section>
+
+  <section>
+    <div class="section-heading">
+      <h2>Shelf-Life Checkpoints</h2>
+      <p>Retained-sample validation schedule.</p>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Due Date</th>
+          <th>Status</th>
+          <th>Inspection</th>
+          <th>Pass / Fail</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for checkpoint in batch.shelf_life_checkpoints %}
+          <tr>
+            <td>{{ checkpoint.checkpoint_month }}</td>
+            <td>{{ checkpoint.due_date }}</td>
+            <td><span class="status-pill">{{ checkpoint.status }}</span></td>
+            <td>{{ checkpoint.inspection_date or "" }}</td>
+            <td>
+              {% if checkpoint.passed is sameas true %}
+                Pass
+              {% elif checkpoint.passed is sameas false %}
+                Fail
+              {% else %}
+                Not Set
+              {% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="5">Release the batch to create shelf-life checkpoints.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
 {% endblock %}
