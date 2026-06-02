@@ -7,7 +7,7 @@
 - Server: `192.168.0.124`
 - Deploy user: `jayk1`
 - SSH target: `jayk1@192.168.0.124`
-- Deploy sequence: not defined yet.
+- Deploy notes: see `docs/launch-handoff.md`
 
 ## Local Dev Port
 - Port: `8020`

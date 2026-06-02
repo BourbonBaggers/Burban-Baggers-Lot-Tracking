@@ -9,8 +9,9 @@ CSV exports, and n8n API access.
 
 ## Current Status
 
-M1 skeleton in progress. The app has a Flask/Jinja shell, environment configuration,
-SQLAlchemy/Alembic wiring, and Docker Compose.
+Launch handoff checkpoint. The app has batch creation, lot traceability, production
+records, release QC, retained samples, shelf-life checkpoints, CSV exports, label printing,
+and product/recipe editing.
 
 ## Run Locally
 
@@ -81,4 +82,5 @@ See:
 
 - `docs/Bourbon_Baggers_Simple_Syrup_PRD_For_Codex.md`
 - `docs/history-plan.md`
+- `docs/launch-handoff.md`
 - `memory/project-state.md`

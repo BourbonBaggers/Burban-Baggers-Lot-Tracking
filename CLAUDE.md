@@ -43,7 +43,11 @@ docker compose run --rm app pytest
 ## Deploy
 
 ```bash
-# Deployment target not selected yet.
+ssh jayk1@192.168.0.124
+cd Burban-Baggers-Lot-Tracking
+git pull
+docker compose up --build -d
+docker compose run --rm app alembic upgrade head
 ```
 
 ## Security

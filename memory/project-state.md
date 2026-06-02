@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-M7 - Product and Recipe Editor complete.
+M8 - Hardening and Launch Review complete.
 
 ## Product
 
@@ -131,16 +131,31 @@ M7 product and recipe editor has been added and verified:
   recipe ingredient defaults for Toasted Cherry Simple Syrup.
 - `docker compose run --rm --build app pytest` passes with 14 tests.
 
+M8 launch handoff has been added and verified:
+
+- `docs/launch-handoff.md` documents setup, verification, Docker volumes, backup, restore,
+  n8n API authentication, server target, first deploy, later deploys, and remaining
+  operational decisions.
+- README now reflects the launch handoff status and points to launch docs.
+- `CLAUDE.md` and `CLAUDE.local.md` include deploy target notes.
+- Final verification commands pass:
+  `python3 -m compileall app migrations tests wsgi.py`,
+  `docker compose run --rm --build app pytest`,
+  and `curl -fsS http://localhost:8020/health`.
+
 ## Open Questions
 
-- Launch hardening, README setup polish, deployment flow, and production backup notes remain.
+- Confirm production port and whether the app should remain on `8020`.
+- Decide whether production needs HTTPS or local-network-only access.
+- Decide backup location and retention schedule.
+- Do a real label print test with actual 1.5 inch round label stock.
 
 ## Deployment
 
 - Server: `192.168.0.124`
 - Deploy user: `jayk1`
 - SSH target: `jayk1@192.168.0.124`
-- Deploy sequence is not defined yet.
+- Deploy sequence is documented in `docs/launch-handoff.md`.
 
 ## Local Dev
 
