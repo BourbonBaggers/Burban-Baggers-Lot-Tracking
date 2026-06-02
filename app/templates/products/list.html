@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Products - Burban Baggers Lot Tracking{% endblock %}
+
+{% block content %}
+  <section class="page-heading">
+    <h1>Products</h1>
+    <p>Recipe defaults and QC targets.</p>
+  </section>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Code</th>
+        <th>Active</th>
+        <th>Recipes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+        <tr>
+          <td><a href="{{ url_for('main.product_detail', product_id=product.id) }}">{{ product.name }}</a></td>
+          <td>{{ product.code }}</td>
+          <td>{{ "Yes" if product.active else "No" }}</td>
+          <td>{{ product.recipes|length }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

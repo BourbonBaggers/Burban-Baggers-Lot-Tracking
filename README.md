@@ -70,6 +70,13 @@ Upload a barcode PNG from the batch detail page, then print the browser label vi
 /batches/{lot_number}/label
 ```
 
+## Products And Recipes
+
+```text
+/products
+/products/{product_id}
+```
+
 See:
 
 - `docs/Bourbon_Baggers_Simple_Syrup_PRD_For_Codex.md`

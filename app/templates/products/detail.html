@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - Burban Baggers Lot Tracking{% endblock %}
+
+{% block content %}
+  <section class="page-heading">
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.code }} recipe defaults and QC targets.</p>
+  </section>
+
+  <section>
+    <div class="section-heading">
+      <h2>Product</h2>
+    </div>
+    <form class="entry-form" data-json-form data-method="PATCH" data-action="{{ url_for('main.api_update_product', product_id=product.id) }}">
+      <div class="form-grid">
+        <label>
+          Name
+          <input name="name" value="{{ product.name }}" required>
+        </label>
+        <label>
+          Code
+          <input name="code" value="{{ product.code }}" required>
+        </label>
+        <label>
+          Active
+          <select name="active">
+            <option value="true" {% if product.active %}selected{% endif %}>Yes</option>
+            <option value="false" {% if not product.active %}selected{% endif %}>No</option>
+          </select>
+        </label>
+      </div>
+      <div class="form-actions">
+        <button type="submit">Save Product</button>
+        <p class="form-message" data-form-message></p>
+      </div>
+    </form>
+  </section>
+
+  <section>
+    <div class="section-heading">
+      <h2>Recipe</h2>
+    </div>
+    <form class="entry-form" data-json-form data-method="PATCH" data-action="{{ url_for('main.api_update_recipe', recipe_id=recipe.id) }}">
+      <div class="form-grid">
+        <label>
+          Name
+          <input name="name" value="{{ recipe.name }}" required>
+        </label>
+        <label>
+          Version
+          <input name="version" value="{{ recipe.version }}" required>
+        </label>
+        <label>
+          Active
+          <select name="active">
+            <option value="true" {% if recipe.active %}selected{% endif %}>Yes</option>
+            <option value="false" {% if not recipe.active %}selected{% endif %}>No</option>
+          </select>
+        </label>
+        <label>
+          Target pH
+          <input type="number" step="0.01" name="target_ph" value="{{ recipe.target_ph if recipe.target_ph is not none else '' }}">
+        </label>
+        <label>
+          Target Brix
+          <input type="number" step="0.01" name="target_brix" value="{{ recipe.target_brix if recipe.target_brix is not none else '' }}">
+        </label>
+        <label>
+          Target Hot Fill Temp F
+          <input type="number" name="target_hot_fill_temp_f" value="{{ recipe.target_hot_fill_temp_f or '' }}">
+        </label>
+        <label>
+          Expected Yield
+          <input name="expected_yield" value="{{ recipe.expected_yield or '' }}">
+        </label>
+      </div>
+      <label>
+        Procedure
+        <textarea name="procedure_text" rows="10">{{ recipe.procedure_text }}</textarea>
+      </label>
+      <label>
+        Notes
+        <textarea name="notes" rows="4">{{ recipe.notes }}</textarea>
+      </label>
+      <div class="form-actions">
+        <button type="submit">Save Recipe</button>
+        <p class="form-message" data-form-message></p>
+      </div>
+    </form>
+  </section>
+
+  <section>
+    <div class="section-heading">
+      <h2>Recipe Ingredients</h2>
+    </div>
+    <form data-recipe-ingredients-form data-action="{{ url_for('main.api_update_recipe_ingredients', recipe_id=recipe.id) }}">
+      <table class="data-table editable-table">
+        <thead>
+          <tr>
+            <th>Ingredient</th>
+            <th>Default Qty</th>
+            <th>Unit</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ingredient in recipe.ingredients %}
+            <tr data-recipe-ingredient-id="{{ ingredient.id }}">
+              <td><input name="ingredient_name" value="{{ ingredient.ingredient_name }}" required></td>
+              <td><input type="number" step="0.001" name="default_quantity" value="{{ ingredient.default_quantity }}" required></td>
+              <td><input name="default_unit" value="{{ ingredient.default_unit }}" required></td>
+              <td><input name="notes" value="{{ ingredient.notes }}"></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="form-actions">
+        <button type="button" data-add-recipe-ingredient>Add Ingredient</button>
+        <button type="submit">Save Ingredients</button>
+        <p class="form-message" data-form-message></p>
+      </div>
+    </form>
+  </section>
+{% endblock %}

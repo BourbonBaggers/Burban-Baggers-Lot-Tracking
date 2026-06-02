@@ -105,10 +105,33 @@ document.addEventListener("submit", (event) => {
   if (uploadForm) {
     event.preventDefault();
     submitUploadForm(uploadForm);
+    return;
+  }
+
+  const recipeIngredientsForm = event.target.closest("[data-recipe-ingredients-form]");
+  if (recipeIngredientsForm) {
+    event.preventDefault();
+    submitRecipeIngredientsForm(recipeIngredientsForm);
   }
 });
 
 document.addEventListener("click", (event) => {
+  const addRecipeIngredient = event.target.closest("[data-add-recipe-ingredient]");
+  if (addRecipeIngredient) {
+    const form = addRecipeIngredient.closest("[data-recipe-ingredients-form]");
+    const body = form.querySelector("tbody");
+    const row = document.createElement("tr");
+    row.dataset.recipeIngredientId = "";
+    row.innerHTML = `
+      <td><input name="ingredient_name" required></td>
+      <td><input type="number" step="0.001" name="default_quantity" required></td>
+      <td><input name="default_unit" required></td>
+      <td><input name="notes"></td>
+    `;
+    body.append(row);
+    return;
+  }
+
   const row = event.target.closest("[data-checkpoint-id]");
   if (!row) {
     return;
@@ -196,4 +219,31 @@ async function submitUploadForm(form) {
       submitButton.disabled = false;
     }
   }
+}
+
+async function submitRecipeIngredientsForm(form) {
+  const message = form.querySelector("[data-form-message]");
+  const ingredients = [...form.querySelectorAll("[data-recipe-ingredient-id]")].map((row) => ({
+    id: row.dataset.recipeIngredientId,
+    ingredient_name: row.querySelector('[name="ingredient_name"]').value,
+    default_quantity: row.querySelector('[name="default_quantity"]').value,
+    default_unit: row.querySelector('[name="default_unit"]').value,
+    notes: row.querySelector('[name="notes"]').value,
+  }));
+
+  message.textContent = "Saving...";
+
+  const response = await fetch(form.dataset.action, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ingredients }),
+  });
+  const payload = await response.json();
+
+  if (!response.ok) {
+    message.textContent = payload.error || "Save failed.";
+    return;
+  }
+
+  message.textContent = `Saved ${payload.ingredient_count} ingredients.`;
 }

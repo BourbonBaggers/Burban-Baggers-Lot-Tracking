@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-M6 - Printing and CSV Exports complete.
+M7 - Product and Recipe Editor complete.
 
 ## Product
 
@@ -118,9 +118,22 @@ M6 printing, label views, and CSV exports have been added and verified:
   view, served the PNG, and returned batch/checkpoint CSV data.
 - `docker compose run --rm --build app pytest` passes with 12 tests.
 
+M7 product and recipe editor has been added and verified:
+
+- Product list at `/products`.
+- Product/recipe editor at `/products/<product_id>`.
+- Product fields can update name, code, and active flag.
+- Recipe fields can update name, version, active flag, QC targets, hot-fill target,
+  expected yield, procedure documentation, and notes.
+- Recipe ingredient defaults can be edited in a table and new rows can be added with
+  vanilla JavaScript.
+- Running app verification saved product fields, recipe fields, and the five seeded
+  recipe ingredient defaults for Toasted Cherry Simple Syrup.
+- `docker compose run --rm --build app pytest` passes with 14 tests.
+
 ## Open Questions
 
-- Product and recipe editor is not implemented yet.
+- Launch hardening, README setup polish, deployment flow, and production backup notes remain.
 
 ## Deployment
 

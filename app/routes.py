@@ -30,6 +30,11 @@ from app.services.production import (
     update_production_record,
     update_release_qc,
 )
+from app.services.recipes import (
+    update_product,
+    update_recipe,
+    update_recipe_ingredients,
+)
 
 main = Blueprint("main", __name__)
 
@@ -67,6 +72,20 @@ def new_batch():
         recipes=recipes,
         today=date.today().isoformat(),
     )
+
+
+@main.get("/products")
+def product_list():
+    products = Product.query.order_by(Product.name).all()
+    return render_template("products/list.html", products=products)
+
+
+@main.get("/products/<int:product_id>")
+def product_detail(product_id):
+    product = Product.query.get_or_404(product_id)
+    active_recipe = next((recipe for recipe in product.recipes if recipe.active), None)
+    recipe = active_recipe or product.recipes[0]
+    return render_template("products/detail.html", product=product, recipe=recipe)
 
 
 @main.get("/batches/<lot_number>")
@@ -206,6 +225,39 @@ def api_upload_label(batch_id):
 
     location = url_for("main.lot_label", lot_number=label.batch.lot_number)
     return jsonify({"id": label.id, "location": location}), 201
+
+
+@main.patch("/api/products/<int:product_id>")
+def api_update_product(product_id):
+    try:
+        product = update_product(product_id, request.get_json(force=True))
+    except (KeyError, ValueError) as error:
+        return jsonify({"error": str(error)}), 400
+
+    return jsonify({"id": product.id})
+
+
+@main.patch("/api/recipes/<int:recipe_id>")
+def api_update_recipe(recipe_id):
+    try:
+        recipe = update_recipe(recipe_id, request.get_json(force=True))
+    except (KeyError, ValueError) as error:
+        return jsonify({"error": str(error)}), 400
+
+    return jsonify({"id": recipe.id})
+
+
+@main.patch("/api/recipes/<int:recipe_id>/ingredients")
+def api_update_recipe_ingredients(recipe_id):
+    try:
+        recipe = update_recipe_ingredients(
+            recipe_id,
+            request.get_json(force=True).get("ingredients", []),
+        )
+    except (KeyError, ValueError) as error:
+        return jsonify({"error": str(error)}), 400
+
+    return jsonify({"id": recipe.id, "ingredient_count": len(recipe.ingredients)})
 
 
 @main.patch("/api/checkpoints/<int:checkpoint_id>")
