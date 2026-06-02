@@ -161,6 +161,21 @@ button {
   gap: 14px;
 }
 
+.form-grid-five {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.inline-form {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.inline-form label {
+  min-width: 240px;
+}
+
 label {
   display: grid;
   gap: 6px;
@@ -184,6 +199,18 @@ textarea {
 
 textarea {
   resize: vertical;
+}
+
+.output-value {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #f3f6f5;
+  color: var(--text);
+  font-weight: 750;
+  padding: 7px 9px;
 }
 
 .form-actions {
@@ -272,7 +299,8 @@ textarea {
 
   .site-header,
   .page-heading-row,
-  .form-actions {
+  .form-actions,
+  .inline-form {
     align-items: stretch;
     flex-direction: column;
   }
@@ -286,6 +314,7 @@ textarea {
   }
 
   .form-grid,
+  .form-grid-five,
   .record-summary dl {
     grid-template-columns: 1fr;
   }

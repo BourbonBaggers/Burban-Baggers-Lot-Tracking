@@ -4,6 +4,7 @@ function formToObject(form) {
 
 async function submitJsonForm(form) {
   const message = form.querySelector("[data-form-message]");
+  const releasedCount = form.querySelector("[data-released-count]");
   message.textContent = "Saving...";
 
   const response = await fetch(form.dataset.action, {
@@ -22,6 +23,10 @@ async function submitJsonForm(form) {
   if (payload.location) {
     window.location.href = payload.location;
     return;
+  }
+
+  if (releasedCount && payload.released_count !== undefined) {
+    releasedCount.textContent = payload.released_count;
   }
 
   message.textContent = "Saved.";

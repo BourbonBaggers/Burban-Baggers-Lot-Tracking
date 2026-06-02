@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-M3 - Batch Creation and Fast Data Entry complete.
+M4 - Production Records, Bottle Counts, and Release QC complete.
 
 ## Product
 
@@ -70,9 +70,24 @@ M3 batch workflow has been added and verified:
 - Verification batch `TC-SYR-20260602-A` was created in the local Docker SQLite volume.
 - Ingredient save was verified through the running app.
 
+M4 production and release workflow has been added and verified:
+
+- Batch detail page now includes compact forms for status, production record, bottle counts,
+  and release QC.
+- `PATCH /api/batches/<id>/status` updates Draft, In Production, QC Pending, Released,
+  On Hold, Failed, and Disposed statuses.
+- `PATCH /api/batches/<id>/production` saves steep, heat, bottling, temperature, and notes.
+- `PATCH /api/batches/<id>/bottle-count` saves bottle accounting and calculates released
+  count as filled - rejected - retained - disposed.
+- `PATCH /api/batches/<id>/release-qc` saves pH, Brix, measurement temperature, sensory
+  notes, seal condition, spoilage observed, pass/fail, and notes.
+- `docker compose run --rm --build app pytest` passes with 6 tests.
+- Running app verification updated `TC-SYR-20260602-A` to Released with production data,
+  release QC, and released count `110`.
+
 ## Open Questions
 
-- Production records, bottle counts, release QC, and status transitions are not implemented yet.
+- Shelf-life checkpoint generation and n8n API endpoints are not implemented yet.
 
 ## Deployment
 

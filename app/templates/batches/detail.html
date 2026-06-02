@@ -6,7 +6,7 @@
   <section class="page-heading page-heading-row">
     <div>
       <h1>{{ batch.lot_number }}</h1>
-      <p>{{ batch.product.name }} · {{ batch.production_date }} · {{ batch.status }}</p>
+      <p>{{ batch.product.name }} - {{ batch.production_date }} - {{ batch.status }}</p>
     </div>
     <button type="button" onclick="window.print()">Print</button>
   </section>
@@ -26,6 +26,26 @@
         <dd>{{ batch.notes or "None" }}</dd>
       </div>
     </dl>
+  </section>
+
+  <section>
+    <div class="section-heading">
+      <h2>Status</h2>
+      <p>Current batch disposition.</p>
+    </div>
+
+    <form class="inline-form" data-json-form data-method="PATCH" data-action="{{ url_for('main.api_update_batch_status', batch_id=batch.id) }}">
+      <label>
+        Status
+        <select name="status">
+          {% for status in ["Draft", "In Production", "QC Pending", "Released", "On Hold", "Failed", "Disposed"] %}
+            <option value="{{ status }}" {% if batch.status == status %}selected{% endif %}>{{ status }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button type="submit">Save Status</button>
+      <p class="form-message" data-form-message></p>
+    </form>
   </section>
 
   <section>
@@ -69,6 +89,157 @@
 
       <div class="form-actions">
         <button type="submit">Save Ingredients</button>
+        <p class="form-message" data-form-message></p>
+      </div>
+    </form>
+  </section>
+
+  <section>
+    <div class="section-heading">
+      <h2>Production Record</h2>
+      <p>Steep, heat, and bottling observations.</p>
+    </div>
+
+    {% set production = batch.production_record %}
+    <form class="entry-form" data-json-form data-method="PATCH" data-action="{{ url_for('main.api_update_production_record', batch_id=batch.id) }}">
+      <div class="form-grid">
+        <label>
+          Steep Start
+          <input type="datetime-local" name="steep_start_time" value="{{ production.steep_start_time.isoformat(timespec='minutes') if production and production.steep_start_time else '' }}">
+        </label>
+        <label>
+          Steep End
+          <input type="datetime-local" name="steep_end_time" value="{{ production.steep_end_time.isoformat(timespec='minutes') if production and production.steep_end_time else '' }}">
+        </label>
+        <label>
+          Heat Start
+          <input type="datetime-local" name="heat_start_time" value="{{ production.heat_start_time.isoformat(timespec='minutes') if production and production.heat_start_time else '' }}">
+        </label>
+        <label>
+          Bottling Start
+          <input type="datetime-local" name="bottling_start_time" value="{{ production.bottling_start_time.isoformat(timespec='minutes') if production and production.bottling_start_time else '' }}">
+        </label>
+        <label>
+          Bottling End
+          <input type="datetime-local" name="bottling_end_time" value="{{ production.bottling_end_time.isoformat(timespec='minutes') if production and production.bottling_end_time else '' }}">
+        </label>
+        <label>
+          Start Temp F
+          <input type="number" step="0.1" name="bottling_start_temp_f" value="{{ production.bottling_start_temp_f if production and production.bottling_start_temp_f is not none else '' }}">
+        </label>
+        <label>
+          End Temp F
+          <input type="number" step="0.1" name="bottling_end_temp_f" value="{{ production.bottling_end_temp_f if production and production.bottling_end_temp_f is not none else '' }}">
+        </label>
+      </div>
+      <label>
+        Notes
+        <textarea name="notes" rows="3">{{ production.notes if production else '' }}</textarea>
+      </label>
+      <div class="form-actions">
+        <button type="submit">Save Production</button>
+        <p class="form-message" data-form-message></p>
+      </div>
+    </form>
+  </section>
+
+  <section>
+    <div class="section-heading">
+      <h2>Bottle Count</h2>
+      <p>Released = filled - rejected - retained - disposed.</p>
+    </div>
+
+    {% set bottles = batch.bottle_count %}
+    <form class="entry-form" data-json-form data-method="PATCH" data-action="{{ url_for('main.api_update_bottle_count', batch_id=batch.id) }}">
+      <div class="form-grid form-grid-five">
+        <label>
+          Filled
+          <input type="number" name="filled_count" value="{{ bottles.filled_count if bottles else 0 }}">
+        </label>
+        <label>
+          Rejected
+          <input type="number" name="rejected_count" value="{{ bottles.rejected_count if bottles else 0 }}">
+        </label>
+        <label>
+          Retained Samples
+          <input type="number" name="retained_sample_count" value="{{ bottles.retained_sample_count if bottles else 4 }}">
+        </label>
+        <label>
+          Disposed
+          <input type="number" name="disposed_count" value="{{ bottles.disposed_count if bottles else 0 }}">
+        </label>
+        <label>
+          Released
+          <output class="output-value" data-released-count>{{ bottles.released_count if bottles else 0 }}</output>
+        </label>
+      </div>
+      <div class="form-actions">
+        <button type="submit">Save Counts</button>
+        <p class="form-message" data-form-message></p>
+      </div>
+    </form>
+  </section>
+
+  <section>
+    <div class="section-heading">
+      <h2>Release QC</h2>
+      <p>Measurements and sensory checks for release or hold decisions.</p>
+    </div>
+
+    <form class="entry-form" data-json-form data-method="PATCH" data-action="{{ url_for('main.api_update_release_qc', batch_id=batch.id) }}">
+      <div class="form-grid">
+        <label>
+          pH
+          <input type="number" step="0.01" name="ph" value="{{ release_qc.ph if release_qc and release_qc.ph is not none else '' }}">
+        </label>
+        <label>
+          Brix
+          <input type="number" step="0.01" name="brix" value="{{ release_qc.brix if release_qc and release_qc.brix is not none else '' }}">
+        </label>
+        <label>
+          Measurement Temp F
+          <input type="number" step="0.1" name="measurement_temp_f" value="{{ release_qc.measurement_temp_f if release_qc and release_qc.measurement_temp_f is not none else '' }}">
+        </label>
+        <label>
+          Spoilage Observed
+          <select name="spoilage_observed">
+            <option value="false" {% if not release_qc or not release_qc.spoilage_observed %}selected{% endif %}>No</option>
+            <option value="true" {% if release_qc and release_qc.spoilage_observed %}selected{% endif %}>Yes</option>
+          </select>
+        </label>
+        <label>
+          Pass / Fail
+          <select name="passed">
+            <option value="" {% if not release_qc or release_qc.passed is none %}selected{% endif %}>Not Set</option>
+            <option value="true" {% if release_qc and release_qc.passed is sameas true %}selected{% endif %}>Pass</option>
+            <option value="false" {% if release_qc and release_qc.passed is sameas false %}selected{% endif %}>Fail</option>
+          </select>
+        </label>
+      </div>
+      <div class="form-grid">
+        <label>
+          Appearance
+          <textarea name="appearance" rows="3">{{ release_qc.appearance if release_qc else '' }}</textarea>
+        </label>
+        <label>
+          Aroma
+          <textarea name="aroma" rows="3">{{ release_qc.aroma if release_qc else '' }}</textarea>
+        </label>
+        <label>
+          Taste Notes
+          <textarea name="taste_notes" rows="3">{{ release_qc.taste_notes if release_qc else '' }}</textarea>
+        </label>
+        <label>
+          Seal Condition
+          <textarea name="seal_condition" rows="3">{{ release_qc.seal_condition if release_qc else '' }}</textarea>
+        </label>
+      </div>
+      <label>
+        Notes
+        <textarea name="notes" rows="3">{{ release_qc.notes if release_qc else '' }}</textarea>
+      </label>
+      <div class="form-actions">
+        <button type="submit">Save Release QC</button>
         <p class="form-message" data-form-message></p>
       </div>
     </form>
