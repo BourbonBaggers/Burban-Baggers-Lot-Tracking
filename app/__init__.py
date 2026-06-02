@@ -3,6 +3,7 @@ from pathlib import Path
 from flask import Flask
 
 from app.config import Config
+from app.cli import register_cli
 from app.extensions import db
 from app.routes import main
 
@@ -16,5 +17,6 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     app.register_blueprint(main)
+    register_cli(app)
 
     return app

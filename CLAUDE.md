@@ -35,6 +35,9 @@ migrations/ Alembic migration environment and versions
 docker compose up --build
 docker compose down
 docker compose logs -f
+docker compose run --rm app alembic upgrade head
+docker compose run --rm app flask seed-data
+docker compose run --rm app pytest
 ```
 
 ## Deploy

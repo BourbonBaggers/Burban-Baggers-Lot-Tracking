@@ -30,6 +30,19 @@ Health check:
 http://localhost:8020/health
 ```
 
+## Database
+
+```bash
+docker compose run --rm app alembic upgrade head
+docker compose run --rm app flask seed-data
+```
+
+## Tests
+
+```bash
+docker compose run --rm app pytest
+```
+
 See:
 
 - `docs/Bourbon_Baggers_Simple_Syrup_PRD_For_Codex.md`

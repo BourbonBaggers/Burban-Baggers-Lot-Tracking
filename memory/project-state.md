@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-M1 - Flask Skeleton and Docker complete.
+M2 - Core Data Model and Seed Data complete.
 
 ## Product
 
@@ -41,10 +41,22 @@ M1 app skeleton has been added and verified:
 - `GET /health` returns `{"status":"ok"}`.
 - `docker compose exec app alembic current` loads the migration environment.
 
+M2 core data layer has been added and verified:
+
+- SQLAlchemy models for products, recipes, recipe ingredients, batches, batch ingredients,
+  production records, bottle counts, QC records, shelf-life checkpoints, and lot labels.
+- Alembic migration `de605f321afb_add_core_lot_tracking_schema.py`.
+- Seed command `flask seed-data` for Toasted Cherry Simple Syrup.
+- Batch service functions for lot-number suffixing and released bottle counts.
+- Pytest coverage for lot-number suffix selection, suffix exhaustion, and released count.
+- `docker compose run --rm --build app alembic upgrade head` passes.
+- `docker compose run --rm app flask seed-data` passes.
+- `docker compose run --rm --build app pytest` passes with 3 tests.
+- Detached app responds at `http://localhost:8020/health`.
+
 ## Open Questions
 
-- Core data models are not implemented yet.
-- First migration is not implemented yet.
+- Batch creation UI and JSON mutation endpoints are not implemented yet.
 
 ## Deployment
 
