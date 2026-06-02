@@ -1,6 +1,16 @@
 from datetime import date
 
-from flask import Blueprint, current_app, jsonify, render_template, request, url_for
+from pathlib import Path
+
+from flask import (
+    Blueprint,
+    current_app,
+    jsonify,
+    render_template,
+    request,
+    send_file,
+    url_for,
+)
 
 from app.models import Batch, Product, Recipe, ShelfLifeCheckpoint
 from app.services.batches import create_batch, update_batch_ingredients
@@ -12,6 +22,8 @@ from app.services.checkpoints import (
     upcoming_checkpoints,
     update_checkpoint,
 )
+from app.services.exports import batches_csv, checkpoints_csv, ingredients_csv, qc_csv
+from app.services.labels import save_lot_label
 from app.services.production import (
     update_batch_status,
     update_bottle_count,
@@ -65,6 +77,21 @@ def batch_detail(lot_number):
     return render_template("batches/detail.html", batch=batch, release_qc=release_qc)
 
 
+@main.get("/batches/<lot_number>/label")
+def lot_label(lot_number):
+    batch = Batch.query.filter_by(lot_number=lot_number).first_or_404()
+    label = batch.labels[-1] if batch.labels else None
+    return render_template("labels/lot.html", batch=batch, label=label)
+
+
+@main.get("/labels/<int:label_id>/barcode")
+def label_barcode(label_id):
+    from app.models import LotLabel
+
+    label = LotLabel.query.get_or_404(label_id)
+    return send_file(Path(label.barcode_png_path), mimetype="image/png")
+
+
 @main.get("/checkpoints")
 def checkpoint_list():
     checkpoints = (
@@ -74,6 +101,26 @@ def checkpoint_list():
     )
     refresh_checkpoint_statuses(checkpoints)
     return render_template("checkpoints/list.html", checkpoints=checkpoints)
+
+
+@main.get("/exports/batches.csv")
+def export_batches():
+    return batches_csv()
+
+
+@main.get("/exports/ingredients.csv")
+def export_ingredients():
+    return ingredients_csv()
+
+
+@main.get("/exports/qc.csv")
+def export_qc():
+    return qc_csv()
+
+
+@main.get("/exports/checkpoints.csv")
+def export_checkpoints():
+    return checkpoints_csv()
 
 
 @main.post("/api/batches")
@@ -144,6 +191,21 @@ def api_update_batch_status(batch_id):
         return jsonify({"error": str(error)}), 400
 
     return jsonify({"id": batch.id, "status": batch.status})
+
+
+@main.post("/api/batches/<int:batch_id>/label")
+def api_upload_label(batch_id):
+    try:
+        label = save_lot_label(
+            batch_id,
+            request.files.get("barcode_png"),
+            current_app.config["UPLOAD_FOLDER"],
+        )
+    except ValueError as error:
+        return jsonify({"error": str(error)}), 400
+
+    location = url_for("main.lot_label", lot_number=label.batch.lot_number)
+    return jsonify({"id": label.id, "location": location}), 201
 
 
 @main.patch("/api/checkpoints/<int:checkpoint_id>")

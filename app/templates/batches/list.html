@@ -11,6 +11,11 @@
     <a class="button" href="{{ url_for('main.new_batch') }}">New Batch</a>
   </section>
 
+  <nav class="export-links" aria-label="CSV exports">
+    <a href="{{ url_for('main.export_batches') }}">Batches CSV</a>
+    <a href="{{ url_for('main.export_ingredients') }}">Ingredients CSV</a>
+  </nav>
+
   <form class="search-form" method="get">
     <label for="q">Lot search</label>
     <input id="q" name="q" value="{{ query }}" autocomplete="off">

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Label - {{ batch.lot_number }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  </head>
+  <body class="label-page">
+    <main class="label-sheet">
+      <section class="round-label">
+        <strong>{{ batch.lot_number }}</strong>
+        {% if label %}
+          <img src="{{ url_for('main.label_barcode', label_id=label.id) }}" alt="">
+        {% else %}
+          <span>No barcode uploaded</span>
+        {% endif %}
+        <small>{{ batch.product.code }} {{ batch.production_date }}</small>
+      </section>
+    </main>
+    <div class="label-actions">
+      <button type="button" onclick="window.print()">Print</button>
+      <a class="button" href="{{ url_for('main.batch_detail', lot_number=batch.lot_number) }}">Back to Batch</a>
+    </div>
+  </body>
+</html>

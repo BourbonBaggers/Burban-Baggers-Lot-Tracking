@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-M5 - Shelf-Life Checkpoints and n8n API complete.
+M6 - Printing and CSV Exports complete.
 
 ## Product
 
@@ -104,9 +104,23 @@ M5 shelf-life checkpoints and n8n API have been added and verified:
   3 month checkpoint from the upcoming API, completed checkpoint `1`, and confirmed the
   due API returned no incomplete due checkpoints.
 
+M6 printing, label views, and CSV exports have been added and verified:
+
+- Batch detail and checkpoint pages have print-friendly layouts through the existing print
+  stylesheet.
+- Batch detail page can upload a barcode PNG for the lot.
+- Browser print label view is available at `/batches/<lot_number>/label`.
+- Uploaded barcode PNGs are stored under the configured upload folder and served through
+  `/labels/<id>/barcode`.
+- CSV exports are available at `/exports/batches.csv`, `/exports/ingredients.csv`,
+  `/exports/qc.csv`, and `/exports/checkpoints.csv`.
+- Running app verification uploaded a test PNG for `TC-SYR-20260602-A`, loaded the label
+  view, served the PNG, and returned batch/checkpoint CSV data.
+- `docker compose run --rm --build app pytest` passes with 12 tests.
+
 ## Open Questions
 
-- Printing, label views, and CSV exports are not implemented yet.
+- Product and recipe editor is not implemented yet.
 
 ## Deployment
 

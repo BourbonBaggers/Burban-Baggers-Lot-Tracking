@@ -53,6 +53,23 @@ GET /api/checkpoints/upcoming?days=30
 GET /api/batches/{lot_number}
 ```
 
+## CSV Exports
+
+```text
+GET /exports/batches.csv
+GET /exports/ingredients.csv
+GET /exports/qc.csv
+GET /exports/checkpoints.csv
+```
+
+## Lot Labels
+
+Upload a barcode PNG from the batch detail page, then print the browser label view:
+
+```text
+/batches/{lot_number}/label
+```
+
 See:
 
 - `docs/Bourbon_Baggers_Simple_Syrup_PRD_For_Codex.md`

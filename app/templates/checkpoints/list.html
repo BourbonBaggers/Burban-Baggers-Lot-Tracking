@@ -8,6 +8,11 @@
     <p>Upcoming, due, overdue, completed, and failed retained-sample validations.</p>
   </section>
 
+  <nav class="export-links" aria-label="CSV exports">
+    <a href="{{ url_for('main.export_checkpoints') }}">Checkpoints CSV</a>
+    <a href="{{ url_for('main.export_qc') }}">QC CSV</a>
+  </nav>
+
   <table class="data-table">
     <thead>
       <tr>

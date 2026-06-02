@@ -98,6 +98,13 @@ document.addEventListener("submit", (event) => {
   if (checkpointForm) {
     event.preventDefault();
     submitCheckpointForm(checkpointForm);
+    return;
+  }
+
+  const uploadForm = event.target.closest("[data-upload-form]");
+  if (uploadForm) {
+    event.preventDefault();
+    submitUploadForm(uploadForm);
   }
 });
 
@@ -157,4 +164,36 @@ async function submitCheckpointForm(form) {
 
   row.querySelector(".status-pill").textContent = result.status;
   message.textContent = "Saved.";
+}
+
+async function submitUploadForm(form) {
+  const message = form.querySelector("[data-form-message]");
+  const submitButton = form.querySelector('button[type="submit"]');
+  const data = new FormData(form);
+
+  if (submitButton) {
+    submitButton.disabled = true;
+  }
+  message.textContent = "Uploading...";
+
+  try {
+    const response = await fetch(form.dataset.action, {
+      method: "POST",
+      body: data,
+    });
+    const payload = await response.json();
+
+    if (!response.ok) {
+      message.textContent = payload.error || "Upload failed.";
+      return;
+    }
+
+    window.location.href = payload.location;
+  } catch {
+    message.textContent = "Upload failed.";
+  } finally {
+    if (submitButton) {
+      submitButton.disabled = false;
+    }
+  }
 }

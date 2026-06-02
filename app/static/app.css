@@ -276,6 +276,67 @@ textarea {
   margin-top: 20px;
 }
 
+.export-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: -6px 0 20px;
+}
+
+.export-links a {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--accent-dark);
+  font-weight: 700;
+  padding: 7px 10px;
+  text-decoration: none;
+}
+
+.label-page {
+  background: #fff;
+}
+
+.label-sheet {
+  display: grid;
+  min-height: 60vh;
+  place-items: center;
+  padding: 40px;
+}
+
+.round-label {
+  display: grid;
+  width: 1.5in;
+  height: 1.5in;
+  place-items: center;
+  border: 1px solid #000;
+  border-radius: 50%;
+  color: #000;
+  font-size: 8px;
+  line-height: 1.1;
+  padding: 0.12in;
+  text-align: center;
+}
+
+.round-label strong {
+  font-size: 9px;
+}
+
+.round-label img {
+  max-width: 0.95in;
+  max-height: 0.55in;
+}
+
+.round-label small {
+  font-size: 7px;
+}
+
+.label-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
 .editable-table {
   min-width: 1120px;
 }
@@ -363,6 +424,8 @@ textarea {
   .site-nav,
   .form-actions,
   .search-form,
+  .export-links,
+  .label-actions,
   button {
     display: none;
   }
@@ -375,5 +438,19 @@ textarea {
   .panel {
     break-inside: avoid;
     border-color: #000;
+  }
+
+  .label-sheet {
+    display: block;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .round-label {
+    margin: 0;
+  }
+
+  @page {
+    margin: 0.25in;
   }
 }
