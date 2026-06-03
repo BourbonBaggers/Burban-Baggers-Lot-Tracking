@@ -23,7 +23,7 @@
           <span>No product barcode configured</span>
         {% endif %}
         <strong>LOT {{ batch.lot_number }}</strong>
-        <small>EXP {{ expiration_date }}</small>
+        <small>EXP {{ expiration_date.strftime("%m/%Y") }}</small>
       </section>
     </main>
     <div class="label-actions">
