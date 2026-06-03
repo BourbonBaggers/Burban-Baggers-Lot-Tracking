@@ -308,6 +308,7 @@ textarea {
   display: grid;
   align-content: start;
   grid-template-rows: auto auto auto;
+  row-gap: 0.01in;
   width: 1.5in;
   height: 1.5in;
   place-items: center;
@@ -327,7 +328,6 @@ textarea {
 
 .lot-label img {
   display: block;
-  margin-bottom: -0.35in;
   max-width: 1.42in;
   max-height: 1.02in;
   object-fit: contain;
