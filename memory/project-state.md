@@ -157,8 +157,18 @@ Post-M8 product label configuration update:
 - Running app verification confirmed `/products/1` shows shelf life `12` and barcode path
   `barcodes/00850078895011-upc-a-sst1.png`.
 - Running app verification confirmed `/batches/TC-SYR-20260602-A/label` renders the UPC,
-  `LOT TC-SYR-20260602-A`, and `EXP 2027-06-02`.
+  `LOT TC-SYR-20260602-A`, and an `EXP MM/YYYY` value from the product shelf life.
 - `docker compose run --rm --build app pytest` passes with 15 tests.
+
+Production deployment:
+
+- Deployed to `jayk1@192.168.0.124` on host `ubuntu-bb-prod`.
+- App URL on the LAN: `http://192.168.0.124:8020`.
+- Deployed commit before this memory checkpoint: `8aa51ea`.
+- Server deployment used Docker Compose, ran Alembic migrations through
+  `8c2f0b4a91d7`, and seeded Toasted Cherry Simple Syrup.
+- Remote container health check and local LAN health check both returned
+  `{"status":"ok"}`.
 
 ## Open Questions
 
