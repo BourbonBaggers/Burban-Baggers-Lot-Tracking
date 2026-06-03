@@ -65,7 +65,14 @@ GET /exports/checkpoints.csv
 
 ## Lot Labels
 
-Upload a barcode PNG from the batch detail page, then print the browser label view:
+Lot labels use the barcode PNG and shelf-life months configured on the product. The
+Toasted Cherry Simple Syrup seed uses a 12 month shelf life and this UPC asset:
+
+```text
+app/static/barcodes/00850078895011-upc-a-sst1.png
+```
+
+Print the browser label view:
 
 ```text
 /batches/{lot_number}/label

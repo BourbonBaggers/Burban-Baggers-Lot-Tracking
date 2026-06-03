@@ -306,29 +306,31 @@ textarea {
 
 .round-label {
   display: grid;
+  grid-template-rows: 1fr auto auto;
   width: 1.5in;
   height: 1.5in;
   place-items: center;
   border: 1px solid #000;
   border-radius: 50%;
   color: #000;
-  font-size: 8px;
+  font-size: 7px;
   line-height: 1.1;
-  padding: 0.12in;
+  padding: 0.08in;
   text-align: center;
 }
 
 .round-label strong {
-  font-size: 9px;
+  font-size: 7px;
 }
 
 .round-label img {
-  max-width: 0.95in;
-  max-height: 0.55in;
+  max-width: 1.32in;
+  max-height: 0.85in;
 }
 
 .round-label small {
   font-size: 7px;
+  font-weight: 750;
 }
 
 .label-actions {

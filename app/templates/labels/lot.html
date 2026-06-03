@@ -9,13 +9,13 @@
   <body class="label-page">
     <main class="label-sheet">
       <section class="round-label">
-        <strong>{{ batch.lot_number }}</strong>
-        {% if label %}
-          <img src="{{ url_for('main.label_barcode', label_id=label.id) }}" alt="">
+        {% if batch.product.barcode_png_path %}
+          <img src="{{ url_for('static', filename=batch.product.barcode_png_path) }}" alt="">
         {% else %}
-          <span>No barcode uploaded</span>
+          <span>No product barcode configured</span>
         {% endif %}
-        <small>{{ batch.product.code }} {{ batch.production_date }}</small>
+        <strong>LOT {{ batch.lot_number }}</strong>
+        <small>EXP {{ expiration_date }}</small>
       </section>
     </main>
     <div class="label-actions">

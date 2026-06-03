@@ -143,6 +143,23 @@ M8 launch handoff has been added and verified:
   `docker compose run --rm --build app pytest`,
   and `curl -fsS http://localhost:8020/health`.
 
+Post-M8 product label configuration update:
+
+- UPC barcode image supplied by the user was moved from `app/templates/labels/` to
+  `app/static/barcodes/00850078895011-upc-a-sst1.png`.
+- Product configuration now includes `shelf_life_months` and `barcode_png_path`.
+- Migration `8c2f0b4a91d7_add_product_label_configuration.py` adds those product fields
+  and configures Toasted Cherry Simple Syrup with 12 month shelf life and the UPC asset.
+- Seed data keeps Toasted Cherry Simple Syrup configured with a 12 month shelf life and
+  the UPC barcode.
+- The label print view no longer requires per-lot barcode upload. It uses the product
+  barcode, displays the lot number, and calculates expiration from product shelf life.
+- Running app verification confirmed `/products/1` shows shelf life `12` and barcode path
+  `barcodes/00850078895011-upc-a-sst1.png`.
+- Running app verification confirmed `/batches/TC-SYR-20260602-A/label` renders the UPC,
+  `LOT TC-SYR-20260602-A`, and `EXP 2027-06-02`.
+- `docker compose run --rm --build app pytest` passes with 15 tests.
+
 ## Open Questions
 
 - Confirm production port and whether the app should remain on `8020`.

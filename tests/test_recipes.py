@@ -29,7 +29,16 @@ def app_context():
 def test_update_product_and_recipe(app_context):
     product, recipe = app_context
 
-    update_product(product.id, {"name": "Cherry Syrup", "code": "CH-SYR", "active": "true"})
+    update_product(
+        product.id,
+        {
+            "name": "Cherry Syrup",
+            "code": "CH-SYR",
+            "active": "true",
+            "shelf_life_months": "18",
+            "barcode_png_path": "barcodes/cherry.png",
+        },
+    )
     update_recipe(
         recipe.id,
         {
@@ -46,6 +55,8 @@ def test_update_product_and_recipe(app_context):
     )
 
     assert product.code == "CH-SYR"
+    assert product.shelf_life_months == 18
+    assert product.barcode_png_path == "barcodes/cherry.png"
     assert recipe.version == "2"
     assert recipe.target_hot_fill_temp_f == 194
 

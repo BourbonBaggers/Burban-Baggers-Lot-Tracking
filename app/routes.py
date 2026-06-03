@@ -23,7 +23,7 @@ from app.services.checkpoints import (
     update_checkpoint,
 )
 from app.services.exports import batches_csv, checkpoints_csv, ingredients_csv, qc_csv
-from app.services.labels import save_lot_label
+from app.services.labels import label_expiration_date, save_lot_label
 from app.services.production import (
     update_batch_status,
     update_bottle_count,
@@ -99,8 +99,11 @@ def batch_detail(lot_number):
 @main.get("/batches/<lot_number>/label")
 def lot_label(lot_number):
     batch = Batch.query.filter_by(lot_number=lot_number).first_or_404()
-    label = batch.labels[-1] if batch.labels else None
-    return render_template("labels/lot.html", batch=batch, label=label)
+    return render_template(
+        "labels/lot.html",
+        batch=batch,
+        expiration_date=label_expiration_date(batch),
+    )
 
 
 @main.get("/labels/<int:label_id>/barcode")

@@ -31,18 +31,13 @@
   <section>
     <div class="section-heading">
       <h2>Lot Label</h2>
-      <p>Upload a barcode PNG and print a 1.5 inch round lot label.</p>
+      <p>Print a 1.5 inch round lot label using the product barcode and shelf life.</p>
     </div>
 
-    <form class="inline-form" data-upload-form data-action="{{ url_for('main.api_upload_label', batch_id=batch.id) }}">
-      <label>
-        Barcode PNG
-        <input type="file" name="barcode_png" accept="image/png" required>
-      </label>
-      <button type="submit">Upload Barcode</button>
+    <div class="inline-form">
       <a class="button" href="{{ url_for('main.lot_label', lot_number=batch.lot_number) }}">Print Label</a>
-      <p class="form-message" data-form-message></p>
-    </form>
+      <p class="form-message">Shelf life: {{ batch.product.shelf_life_months }} months</p>
+    </div>
   </section>
 
   <section>

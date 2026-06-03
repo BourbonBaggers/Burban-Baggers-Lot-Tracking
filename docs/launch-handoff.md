@@ -94,6 +94,19 @@ GET /api/checkpoints/upcoming?days=30
 GET /api/batches/{lot_number}
 ```
 
+## Lot Label Configuration
+
+Product configuration controls the label barcode and shelf life. The seeded Toasted
+Cherry Simple Syrup product is configured with:
+
+```text
+shelf_life_months = 12
+barcode_png_path = barcodes/00850078895011-upc-a-sst1.png
+```
+
+The batch label print view uses the product barcode, the batch lot number, and an
+expiration date calculated from `production_date + shelf_life_months`.
+
 ## Deployment Target
 
 Server:

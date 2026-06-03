@@ -24,6 +24,8 @@ class Product(TimestampMixin, db.Model):
     name = db.Column(db.String(160), nullable=False)
     code = db.Column(db.String(40), nullable=False, unique=True, index=True)
     active = db.Column(db.Boolean, nullable=False, default=True)
+    shelf_life_months = db.Column(db.Integer, nullable=False, default=12)
+    barcode_png_path = db.Column(db.String(500), nullable=False, default="")
 
     recipes = db.relationship("Recipe", back_populates="product")
     batches = db.relationship("Batch", back_populates="product")

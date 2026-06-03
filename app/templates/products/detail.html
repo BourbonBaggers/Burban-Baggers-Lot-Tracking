@@ -29,6 +29,14 @@
             <option value="false" {% if not product.active %}selected{% endif %}>No</option>
           </select>
         </label>
+        <label>
+          Shelf Life Months
+          <input type="number" name="shelf_life_months" value="{{ product.shelf_life_months }}" required>
+        </label>
+        <label>
+          Barcode PNG Path
+          <input name="barcode_png_path" value="{{ product.barcode_png_path }}">
+        </label>
       </div>
       <div class="form-actions">
         <button type="submit">Save Product</button>

@@ -39,9 +39,16 @@ def seed_initial_data():
             name="Toasted Cherry Simple Syrup",
             code="TC-SYR",
             active=True,
+            shelf_life_months=12,
+            barcode_png_path="barcodes/00850078895011-upc-a-sst1.png",
         )
         db.session.add(product)
         db.session.flush()
+    else:
+        product.shelf_life_months = product.shelf_life_months or 12
+        product.barcode_png_path = (
+            product.barcode_png_path or "barcodes/00850078895011-upc-a-sst1.png"
+        )
 
     recipe = Recipe.query.filter_by(product_id=product.id, version="1").one_or_none()
     if recipe is None:

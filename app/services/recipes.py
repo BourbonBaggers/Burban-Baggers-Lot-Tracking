@@ -12,6 +12,16 @@ def update_product(product_id, data):
     product.name = data["name"].strip()
     product.code = data["code"].strip()
     product.active = parse_bool(data.get("active"))
+    product.shelf_life_months = (
+        parse_int(data.get("shelf_life_months"))
+        if "shelf_life_months" in data
+        else product.shelf_life_months
+    )
+    product.barcode_png_path = (
+        data.get("barcode_png_path", "").strip()
+        if "barcode_png_path" in data
+        else product.barcode_png_path
+    )
     db.session.commit()
     return product
 

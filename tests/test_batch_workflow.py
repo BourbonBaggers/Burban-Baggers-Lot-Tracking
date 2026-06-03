@@ -6,6 +6,7 @@ from app import create_app
 from app.extensions import db
 from app.models import Product, Recipe, RecipeIngredient
 from app.services.batches import create_batch
+from app.services.labels import label_expiration_date
 from app.services.production import (
     update_batch_status,
     update_bottle_count,
@@ -87,6 +88,15 @@ def test_release_qc_and_status_update(app_context):
 
     assert qc.passed is True
     assert updated_batch.status == "Released"
+
+
+def test_label_expiration_uses_product_shelf_life(app_context):
+    product, recipe = create_test_recipe()
+    product.shelf_life_months = 12
+    db.session.commit()
+    batch = create_batch(product.id, recipe.id, date(2026, 6, 2))
+
+    assert label_expiration_date(batch) == date(2027, 6, 2)
 
 
 def create_test_recipe():

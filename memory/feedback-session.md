@@ -15,6 +15,9 @@
 - User observed that batch creation appeared to hang for about 10 seconds after lot number
   generation. Root cause was the single sync Gunicorn worker blocking behind an idle local
   connection; the app now uses 2 workers and 4 threads.
+- User supplied the Toasted Cherry Simple Syrup UPC PNG and clarified it should be product
+  configuration, not something uploaded on every lot. Labels should maximize barcode size
+  and include expiration date plus lot number. Toasted Cherry shelf life starts at 12 months.
 
 ## UX Preferences
 

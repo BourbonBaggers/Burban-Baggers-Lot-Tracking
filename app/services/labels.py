@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 
 from app.extensions import db
 from app.models import Batch, LotLabel
+from app.services.checkpoints import add_months
 
 
 def save_lot_label(batch_id, upload, upload_folder):
@@ -28,3 +29,7 @@ def save_lot_label(batch_id, upload, upload_folder):
     db.session.add(label)
     db.session.commit()
     return label
+
+
+def label_expiration_date(batch):
+    return add_months(batch.production_date, batch.product.shelf_life_months)
