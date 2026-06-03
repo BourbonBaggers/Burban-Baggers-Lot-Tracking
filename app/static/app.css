@@ -304,33 +304,37 @@ textarea {
   padding: 40px;
 }
 
-.round-label {
+.lot-label {
   display: grid;
-  grid-template-rows: 1fr auto auto;
+  grid-template-rows: minmax(0, 1fr) auto auto;
   width: 1.5in;
   height: 1.5in;
   place-items: center;
-  border: 1px solid #000;
-  border-radius: 50%;
   color: #000;
   font-size: 7px;
   line-height: 1.1;
-  padding: 0.08in;
+  overflow: hidden;
+  padding: 0.04in;
   text-align: center;
 }
 
-.round-label strong {
-  font-size: 7px;
+.lot-label strong {
+  font-size: 6.5px;
+  line-height: 1;
+  margin-top: 0.02in;
 }
 
-.round-label img {
-  max-width: 1.32in;
-  max-height: 0.85in;
+.lot-label img {
+  display: block;
+  max-width: 1.42in;
+  max-height: 1.02in;
+  object-fit: contain;
 }
 
-.round-label small {
-  font-size: 7px;
+.lot-label small {
+  font-size: 6.5px;
   font-weight: 750;
+  line-height: 1;
 }
 
 .label-actions {
@@ -443,16 +447,40 @@ textarea {
   }
 
   .label-sheet {
-    display: block;
+    display: grid;
+    width: 1.5in;
+    height: 1.5in;
     min-height: 0;
+    place-items: center;
     padding: 0;
   }
 
-  .round-label {
+  .lot-label {
     margin: 0;
   }
 
   @page {
     margin: 0.25in;
   }
+
+  .label-page {
+    page: label-page;
+    width: 1.5in;
+    height: 1.5in;
+    margin: 0;
+  }
+
+  .label-page .label-sheet {
+    margin: 0;
+  }
+
+  .label-page .lot-label {
+    width: 1.5in;
+    height: 1.5in;
+  }
+}
+
+@page label-page {
+  size: 1.5in 1.5in;
+  margin: 0;
 }

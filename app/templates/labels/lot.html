@@ -5,10 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Label - {{ batch.lot_number }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+    <style>
+      @media print {
+        @page {
+          size: 1.5in 1.5in;
+          margin: 0;
+        }
+      }
+    </style>
   </head>
   <body class="label-page">
     <main class="label-sheet">
-      <section class="round-label">
+      <section class="lot-label">
         {% if batch.product.barcode_png_path %}
           <img src="{{ url_for('static', filename=batch.product.barcode_png_path) }}" alt="">
         {% else %}
