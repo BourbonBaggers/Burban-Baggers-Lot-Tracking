@@ -306,7 +306,8 @@ textarea {
 
 .lot-label {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto auto;
+  align-content: start;
+  grid-template-rows: auto auto auto;
   width: 1.5in;
   height: 1.5in;
   place-items: center;
@@ -321,14 +322,16 @@ textarea {
 .lot-label strong {
   font-size: 6.5px;
   line-height: 1;
-  margin-top: 0.02in;
+  margin-top: 0;
 }
 
 .lot-label img {
   display: block;
+  margin-bottom: -0.35in;
   max-width: 1.42in;
   max-height: 1.02in;
   object-fit: contain;
+  transform: translateY(-0.375in);
 }
 
 .lot-label small {
