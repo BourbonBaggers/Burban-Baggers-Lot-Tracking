@@ -331,7 +331,6 @@ textarea {
   max-width: 1.42in;
   max-height: 1.02in;
   object-fit: contain;
-  transform: translateY(-0.375in);
 }
 
 .lot-label small {
